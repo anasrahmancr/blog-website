@@ -1,6 +1,7 @@
 import User from "../models/User.js";
 import jwt from "jsonwebtoken";
 import bcrypt from "bcrypt";
+import Cookies from 'js-cookie';
 
 // get Register Page
 const getRegister = (req, res) => {};
@@ -43,6 +44,7 @@ const loginData = async (req, res) => {
     const { email, password } = req.body;
     try {
         const user = await User.findOne({ email });
+        console.log(user,"userrrrrrr");
         if (!user) {
             console.log('email not found');
             return res.send({
@@ -50,9 +52,8 @@ const loginData = async (req, res) => {
                 message: 'email not found'
             });
         }
-        console.log(password,"=password", user.password,"=user.password");
+        
         const isPassValid = await bcrypt.compare(password, user.password);
-        console.log(isPassValid,"......");
         if (!isPassValid) {
             console.log('wrong password');
             return res.send({
@@ -70,11 +71,16 @@ const loginData = async (req, res) => {
                 expiresIn: "24h",
             }
         );
-        
-        res.cookie('token', token, { httpOnly: true });
-        console.log(user,"userrrrrrrrrrrrr");
+        Cookies.set('token', token, { expires: 1, path: '/' });
+      //   res.cookie('token', token, { httpOnly: true, 
+      //   secure: true, 
+      // sameSite: 'None' });
+
+        const cookieValue = req.cookies.token;
+        console.log("token = ", cookieValue);
+
         return res.send({
-            success: true,
+            success: true, 
             message: 'login successful',
             user: user
         });

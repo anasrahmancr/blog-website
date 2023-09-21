@@ -1,7 +1,10 @@
 import jwt from 'jsonwebtoken'
 
 export const auth = async (req, res, next) => {
+    console.log("inside authththt",req.cookies);
     const token = await req.cookies.token;
+
+    console.log(token,"tokennnnnnnnnn");
     const key = 'secure_key';
 
     if (token) {
@@ -23,7 +26,7 @@ export const auth = async (req, res, next) => {
         })
     }
 }
-export default auth
+export default auth;
 
 
 
