@@ -16,7 +16,7 @@ function Register() {
         {name, email, password}
       );
       console.log("Registered:", response.data);
-      navigate("/login");
+      navigate("/");
 
       // Handle successful login, e.g., redirect to dashboard
     } catch (error) {
@@ -130,7 +130,7 @@ function Register() {
             href="#"
             className="font-semibold leading-6 text-indigo-600 hover:text-indigo-500"
           >
-            <Link to="/login">Sign in</Link> 
+            <Link to="/">Sign in</Link> 
           </a>
         </p>
       </div>

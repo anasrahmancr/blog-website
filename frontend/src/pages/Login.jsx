@@ -9,14 +9,13 @@ function Login() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log('hiiiiiiiiiiiii');
     try {
       const response = await axios.post(
         "http://localhost:5000/login",
         {email, password}
       );
       console.log("Logged in:");
-        navigate("/");
+        navigate("/home");
       // Handle successful login, e.g., redirect to dashboard
     } catch (error) {
       console.error("Login failed:", error);
