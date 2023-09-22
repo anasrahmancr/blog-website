@@ -5,9 +5,10 @@ const key = "secure_key";
 
 const blogHome = async (req, res) => {
   try {
-    // const blogs = await User.find({blogs});
-    // res.status(201).json({blogs})
-    res.send({ message: "home page" });
+    console.log("inside bloghome");
+    const blogs = await Blogs.find();
+    console.log(blogs,"blogs");
+    return res.json({blogs});
   } catch (error) {
     res.status(400).json({ message: error.message });
   }
@@ -15,30 +16,29 @@ const blogHome = async (req, res) => {
 
 const createBlog = async (req, res) => {
   try {
-    console.log("inside blog controller")
-    console.log(req.body,"body");
-    console.log(req.files[0],"files");
     const token = req.cookies.token;
-    console.log("cookie =", req.cookies.token);
     const decodedToken = jwt.verify(token, key);
     const { user_id, email } = decodedToken;
-    console.log("User ID:", user_id);
-    console.log("Email:", email);
-
+    
     const { title, description } = req.body;
-    const image = req.files[0];
+    const image = req.file;
     if (!title || !description || !image) {
       return res.status(200).json({ message: "Fill all the fields" });
     }
 
-    // const userBlog = new Blogs({
-    //    title: title,
-    //    description: description,
-    //    image: image,
-    //    author:
-    // })
-    // userBlog.save();
-    res.status(200).json({ message: "successfully created blog" });
+    const user = await User.findOne({email})
+    if(user){
+      const userBlog = new Blogs({
+        title: title,
+        description: description,
+        image: image.filename,
+        author: user._id,
+        createdAt: Date.now(),
+        updatedAt: Date.now(),
+      })
+      userBlog.save();
+      res.status(200).json({ message: "successfully created blog" });
+  }
   } catch (error) {
     res.status(400).json({ message: error.message });
   }
